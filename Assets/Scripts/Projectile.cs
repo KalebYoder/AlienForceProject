@@ -8,7 +8,10 @@ public class Projectile : MonoBehaviour {
     public void Start()
     {
         int speed = 2;
-        GetComponent<Rigidbody2D>().velocity = transform.forward;
-        GetComponent<Rigidbody2D>().velocity.Set(0, speed);
+    }
+
+    void FixedUpdate()
+    {
+        transform.position += transform.up * Time.deltaTime * speed;
     }
 }

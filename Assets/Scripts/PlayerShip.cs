@@ -4,16 +4,16 @@ using System.Collections;
 public class PlayerShip : Ship {
 
     public bool isDead;
+    
     Vector2 SpawnLoc; //The random grid square where the player will be respawned upon death.
 
 	// Use this for initialization
 	void Start () {
         isDead = false;
-        Direction = new Vector2();
-        Direction = Vector2.left;
         pointValue = 0;
+        health = 1;
         SpawnLoc = new Vector2();
-	}
+    }
 
     public void Spawn()
     {

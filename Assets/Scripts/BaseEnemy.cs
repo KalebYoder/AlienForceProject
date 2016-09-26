@@ -5,8 +5,6 @@ public class BaseEnemy : Ship {
 
 	// Use this for initialization
 	void Start () {
-        Direction = new Vector2();
-        Direction = Vector2.down;
         pointValue = 100;
         health = 1;
 	}
@@ -16,7 +14,7 @@ public class BaseEnemy : Ship {
         if (collision.collider.CompareTag("Player"))
         {
             PlayerShip Player = collision.collider.GetComponent<PlayerShip>();
-            Player.health--;
+            health--;
         }
         else if(collision.collider.CompareTag("Enemy") && Physics2D.Raycast(this.transform.position, this.transform.forward, 1.0f))
         {

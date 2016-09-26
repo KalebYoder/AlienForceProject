@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class AlienForce : MonoBehaviour {
@@ -6,15 +7,19 @@ public class AlienForce : MonoBehaviour {
     public GameObject Asteroid;
     public ArrayList AsteroidList = new ArrayList();
     int levelNum;
+    //public GameObject PlayerShip;
     public GameObject PlayerShip;
+    public ArrayList PlayerList = new ArrayList();
     PlayerShip Player;
+    //public PlayerShip Player;
+    //public GameObject Player;
     int levelDisplay;
     public GameObject EnemyShip;
     public ArrayList EnemyList = new ArrayList();
+    Text LevelText;
 
-	// Use this for initialization
-	void Start () {
-        levelDisplay = 0;
+    // Use this for initialization
+    void Start () {
         for (float x = 1.5f; x < 21.0f; x+=2.0f) //tried floats ending in .5, now trying integers
         {
             for (float y = -1.5f; y > -21.0f; y-=2.0f)
@@ -25,76 +30,116 @@ public class AlienForce : MonoBehaviour {
                 AsteroidList.Add(Instantiate(Asteroid, new Vector3(x, y, 0f), Quaternion.identity));
             }
         }
-        GameObject Player = (GameObject)Instantiate(PlayerShip, new Vector3(20.5f, -20.5f, 0f), Quaternion.identity);
-        for (float x = .5f; x < 21f; x += 2.0f)
-        {
-            EnemyList.Add(Instantiate(EnemyShip, new Vector3(x, -.5f, 0f), Quaternion.identity));
-        }
+        GameObject GameObjPlayer = (GameObject)Instantiate(PlayerShip, new Vector2(20.5f, -20.5f), Quaternion.Euler(0, 0, 90));
+        Player = GameObjPlayer.GetComponent<PlayerShip>();
+        //Player = (GameObject) Instantiate(Player, new Vector2(20.5f, -20.5f), Quaternion.Euler(0, 0, 90));
+        //Player = gameObject.AddComponent<PlayerShip.cs>();
+        //PlayerList.Add(Instantiate(PlayerShip, new Vector3(20.5f, -20.5f, 0f), Quaternion.identity));
+        //.rigidbody2d.velocity = 
+        //GameObject Player = (GameObject)Instantiate(PlayerShip, new Vector3(20.5f, -20.5f, 0f), Quaternion.identity);
+        //Player = (PlayerShip)Player;
         //define level text outside of this method
         //define lives outside of this method
         //displayLives(3);
         //define LevelNum outside this method
         levelNum = 0;
-        //StartLevel();
+        StartLevel();
     }
 
     // Update is called once per frame
-    /*void update()
+    void Update()
     {
         if (EnemyList.Count == 0)
         {
-            //StartLevel();
+            StartLevel();
         }
         //Need condition for dead player
-        if (Input.GetKeyDown("space"))
+        if (!(Player.isDead))
         {
-            if (!(Player.isDead || Player.shotExists))
+            if (Input.GetKeyDown("space") && !(Player.shotExists))
             {
                 Player.Fire();
             }
-            else
+            else if (Input.GetKeyDown("up"))
             {
-                Player.Spawn();
+                Player.transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else if (Input.GetKeyDown("left"))
+            {
+                Player.transform.rotation = Quaternion.Euler(0, 0, 90);
+            }
+            else if (Input.GetKeyDown("down"))
+            {
+                Player.transform.rotation = Quaternion.Euler(0, 0, 180);
+            }
+            else if (Input.GetKeyDown("right"))
+            {
+                Player.transform.rotation = Quaternion.Euler(0, 0, 270);
             }
         }
-        else if (Input.GetKeyDown("up"))
+        //Player.transform.position += transform.forward * Time.deltaTime * Player.speed;
+        else if (Input.GetKeyDown("space"))
         {
-            Player.Direction = Vector2.up;
-        }
-        else if (Input.GetKeyDown("down"))
+            Player.Spawn();
+        }      
+    }
+    /*void FixedUpdate()
+    {
+        if (EnemyList.Count == 0)
         {
-            Player.Direction = Vector2.down;
+            StartLevel();
         }
-        else if (Input.GetKeyDown("left"))
+        //Need condition for dead player
+        if (!(Player.isDead))
         {
-            Player.Direction = Vector2.left;
+            if (Input.GetKeyDown("space") && !(Player.shotExists))
+            {
+                Player.Fire();
+            }
+            else if (Input.GetKeyDown("up"))
+            {
+                Player.transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else if (Input.GetKeyDown("left"))
+            {
+                Player.transform.rotation = Quaternion.Euler(0, 0, 90);
+            }
+            else if (Input.GetKeyDown("down"))
+            {
+                Player.transform.rotation = Quaternion.Euler(0, 0, 180);
+            }
+            else if (Input.GetKeyDown("right"))
+            {
+                Player.transform.rotation = Quaternion.Euler(0, 0, 270);
+            }
         }
-        else if (Input.GetKeyDown("right"))
+        if (Input.GetKeyDown("space") && Time.timeScale != 0)
         {
-            Player.Direction = Vector2.right;
+            Player.Spawn();
         }
-    }*/
 
-    /*private void StartLevel()
+    }*/
+    private void StartLevel()
     {
         Time.timeScale = 0; //pause game until space is hit
         levelDisplay++;
-        Player.transform.position = new Vector2(21, -21);
-        for (int x = 0; x <= 21; x += 2)
+        Player.transform.position = new Vector2(20.5f, -20.5f);
+        Player.transform.rotation = Quaternion.Euler(0, 0, 90);
+        for (float x = .5f; x < 21f; x += 2.0f)
         {
-            EnemyList.Add(Instantiate(BaseEnemy, new Vector2(x, 0), Quaternion.identity));
+            EnemyList.Add(Instantiate(EnemyShip, new Vector3(x, -.5f, 0f), Quaternion.Euler(0, 0, 180)));
         }
         //put "Press space to start" on screen
-        while (!Input.GetKeyDown("Space"))
+        /*while (!Input.GetKeyDown("space"))
         {
             //Waiting for player to hit space before starting the level
-        }
+        }*/
         Time.timeScale = 1;
-    }*/
-
-    public void ShipCollision(BaseEnemy EnemyShip1, BaseEnemy EnemyShip2)
-    {
-        //if(Raycast(EnemyShip1.transform, EnemyShip1.Direction, 1.0f)
-        //ship facing colliding ship reverses direction for at least three units
     }
+
+    /*public void ShipCollision(BaseEnemy EnemyShip1, BaseEnemy EnemyShip2)
+    {
+        //if(Raycast(EnemyShip1.transform, EnemyShip1.transform.rotation, 1.0f)
+        //ship facing colliding ship reverses direction for at least three units
+    }*/
 }
