@@ -21,11 +21,11 @@ public class PlayerShip : Ship {
         SpawnLoc.y = Random.Range(0, -21);
     }
 
-    void OnCollisionEnter(Collision collision)
+    /*void OnCollisionEnter2D(Collision collision)
     {
         if (collision.collider.CompareTag("Enemy") || collision.collider.CompareTag("EnemyShot"))
         {
             health--;
         }
-    }
+    }*/
 }

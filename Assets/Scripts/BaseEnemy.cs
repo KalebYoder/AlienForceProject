@@ -9,7 +9,7 @@ public class BaseEnemy : Ship {
         health = 1;
 	}
 
-    void OnCollisionEnter(Collision collision)
+    /*void OnCollisionEnter2D(Collision collision)
     {
         if (collision.collider.CompareTag("Player"))
         {
@@ -31,5 +31,5 @@ public class BaseEnemy : Ship {
                 this.transform.Rotate(new Vector2(0f, -90f));
             }
         }
-    }
+    }*/
 }
