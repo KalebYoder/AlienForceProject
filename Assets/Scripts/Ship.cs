@@ -1,17 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class Ship : MonoBehaviour {
 
     public int health { get; set; }
     public bool shotExists;
+    //GameObject GameObjShot;
+    //protected Projectile Shot;
     public GameObject Shot;
     protected float speed = 1;
     protected int pointValue;
 
     public void Fire()
     {
-        Instantiate(Shot, transform.position, transform.rotation);
+        //GameObjShot = (GameObject)Instantiate(GameObjShot, (transform.position + (transform.up * 0.5f)) , transform.rotation);
+        //Shot = GameObjShot.GetComponent<Projectile>();
+        Shot = (GameObject)Instantiate(Shot, (transform.position + (transform.up * 0.5f)), transform.rotation);
+        //Shot.SetParent(this);
         shotExists = true;
     }
 

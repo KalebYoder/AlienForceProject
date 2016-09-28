@@ -9,11 +9,10 @@ public class BaseEnemy : Ship {
         health = 1;
 	}
 
-    /*void OnCollisionEnter2D(Collision collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Player"))
         {
-            PlayerShip Player = collision.collider.GetComponent<PlayerShip>();
             health--;
         }
         else if(collision.collider.CompareTag("Enemy") && Physics2D.Raycast(this.transform.position, this.transform.forward, 1.0f))
@@ -31,5 +30,5 @@ public class BaseEnemy : Ship {
                 this.transform.Rotate(new Vector2(0f, -90f));
             }
         }
-    }*/
+    }
 }

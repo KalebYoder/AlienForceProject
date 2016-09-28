@@ -1,22 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AlienForce : MonoBehaviour {
 
     public GameObject Asteroid;
-    public ArrayList AsteroidList = new ArrayList();
+    //public ArrayList AsteroidList = new ArrayList();
+    public List<Object> AsteroidList = new List<Object>();
     int levelNum;
     //public GameObject PlayerShip;
     public GameObject PlayerShip;
-    public ArrayList PlayerList = new ArrayList();
+    //public ArrayList PlayerList = new ArrayList();
     PlayerShip Player;
     //public PlayerShip Player;
     //public GameObject Player;
     int levelDisplay;
     public GameObject EnemyShip;
-    public ArrayList EnemyList = new ArrayList();
-    Text LevelText;
+    //public ArrayList EnemyList = new ArrayList();
+    public List<Object> EnemyList = new List<Object>();
+    //Text LevelText;
 
     // Use this for initialization
     void Start () {
@@ -24,20 +27,11 @@ public class AlienForce : MonoBehaviour {
         {
             for (float y = -1.5f; y > -21.0f; y-=2.0f)
             {
-                //Asteroid myAsteroid = (Asteroid)Instantiate(newAsteroid, Coordinates, Quaternion.identity);
-                //Debug.Log(newAsteroid.transform);
-                //Asteroid newAsteroid = (Asteroid)Instantiate(Asteroid, new Vector3(x, y, 0), Quaternion.identity);
                 AsteroidList.Add(Instantiate(Asteroid, new Vector3(x, y, 0f), Quaternion.identity));
             }
         }
         GameObject GameObjPlayer = (GameObject)Instantiate(PlayerShip, new Vector2(20.5f, -20.5f), Quaternion.Euler(0, 0, 90));
         Player = GameObjPlayer.GetComponent<PlayerShip>();
-        //Player = (GameObject) Instantiate(Player, new Vector2(20.5f, -20.5f), Quaternion.Euler(0, 0, 90));
-        //Player = gameObject.AddComponent<PlayerShip.cs>();
-        //PlayerList.Add(Instantiate(PlayerShip, new Vector3(20.5f, -20.5f, 0f), Quaternion.identity));
-        //.rigidbody2d.velocity = 
-        //GameObject Player = (GameObject)Instantiate(PlayerShip, new Vector3(20.5f, -20.5f, 0f), Quaternion.identity);
-        //Player = (PlayerShip)Player;
         //define level text outside of this method
         //define lives outside of this method
         //displayLives(3);
@@ -56,7 +50,7 @@ public class AlienForce : MonoBehaviour {
         //Need condition for dead player
         if (!(Player.isDead))
         {
-            if (Input.GetKeyDown("space") && !(Player.shotExists))
+            if (Input.GetKeyDown("space")) //&& !(Player.shotExists))
             {
                 Player.Fire();
             }
@@ -83,42 +77,7 @@ public class AlienForce : MonoBehaviour {
             Player.Spawn();
         }      
     }
-    /*void FixedUpdate()
-    {
-        if (EnemyList.Count == 0)
-        {
-            StartLevel();
-        }
-        //Need condition for dead player
-        if (!(Player.isDead))
-        {
-            if (Input.GetKeyDown("space") && !(Player.shotExists))
-            {
-                Player.Fire();
-            }
-            else if (Input.GetKeyDown("up"))
-            {
-                Player.transform.rotation = Quaternion.Euler(0, 0, 0);
-            }
-            else if (Input.GetKeyDown("left"))
-            {
-                Player.transform.rotation = Quaternion.Euler(0, 0, 90);
-            }
-            else if (Input.GetKeyDown("down"))
-            {
-                Player.transform.rotation = Quaternion.Euler(0, 0, 180);
-            }
-            else if (Input.GetKeyDown("right"))
-            {
-                Player.transform.rotation = Quaternion.Euler(0, 0, 270);
-            }
-        }
-        if (Input.GetKeyDown("space") && Time.timeScale != 0)
-        {
-            Player.Spawn();
-        }
 
-    }*/
     private void StartLevel()
     {
         Time.timeScale = 0; //pause game until space is hit
@@ -136,7 +95,6 @@ public class AlienForce : MonoBehaviour {
         }*/
         Time.timeScale = 1;
     }
-
     /*public void ShipCollision(BaseEnemy EnemyShip1, BaseEnemy EnemyShip2)
     {
         //if(Raycast(EnemyShip1.transform, EnemyShip1.transform.rotation, 1.0f)
