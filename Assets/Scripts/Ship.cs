@@ -16,7 +16,8 @@ public abstract class Ship : MonoBehaviour {
     {
         //GameObjShot = (GameObject)Instantiate(GameObjShot, (transform.position + (transform.up * 0.5f)) , transform.rotation);
         //Shot = GameObjShot.GetComponent<Projectile>();
-        Shot = (GameObject)Instantiate(Shot, (transform.position + (transform.up * 0.5f)), transform.rotation);
+        Shot = (GameObject)Instantiate(Shot, (transform.position + (transform.up * 0.6f)), transform.rotation);
+        Shot.transform.parent = this.transform;
         //Shot.SetParent(this);
         shotExists = true;
     }

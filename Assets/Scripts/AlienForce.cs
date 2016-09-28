@@ -50,7 +50,7 @@ public class AlienForce : MonoBehaviour {
         //Need condition for dead player
         if (!(Player.isDead))
         {
-            if (Input.GetKeyDown("space")) //&& !(Player.shotExists))
+            if (Input.GetKeyDown("space") && !(Player.shotExists))
             {
                 Player.Fire();
             }
