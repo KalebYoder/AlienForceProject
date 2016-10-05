@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class AlienForce : MonoBehaviour {
 
     public GameObject Asteroid;
+    private GameObject NewAsteroid;
     //public ArrayList AsteroidList = new ArrayList();
     public List<Object> AsteroidList = new List<Object>();
     int levelNum;
@@ -17,19 +18,43 @@ public class AlienForce : MonoBehaviour {
     //public GameObject Player;
     int levelDisplay;
     public GameObject EnemyShip;
+    private GameObject NewShip;
     //public ArrayList EnemyList = new ArrayList();
     public List<Object> EnemyList = new List<Object>();
     //Text LevelText;
+    public List<Object> PathList = new List<Object>();
+    public GameObject Path;
+    private GameObject NewPath;
 
     // Use this for initialization
     void Start () {
-        for (float x = 1.5f; x < 21.0f; x+=2.0f) //tried floats ending in .5, now trying integers
+       //creates asteroid field
+        for (float x = 1.5f; x < 21.0f; x+=2.0f)
         {
             for (float y = -1.5f; y > -21.0f; y-=2.0f)
             {
-                AsteroidList.Add(Instantiate(Asteroid, new Vector3(x, y, 0f), Quaternion.identity));
+                NewAsteroid = (GameObject)(Instantiate(Asteroid, new Vector3(x, y, 0f), Quaternion.identity));
+                NewAsteroid.transform.parent = GameObject.Find("Asteroids").transform; //parents object to an empty at 0,0,0 to make the heirarchy cleaner when debugging.
+                AsteroidList.Add(NewAsteroid);
             }
         }
+
+        //instantiates paths which trigger pathfinding logic
+        for (float y = -.5f; y > -20.5f; y-= 2.0f)
+        {
+            NewPath = (GameObject)Instantiate(Path, new Vector3(10.5f, y, 0f), Quaternion.identity);
+            NewPath.transform.parent = GameObject.Find("Paths").transform; //parents object to an empty at 0,0,0 to make the heirarchy cleaner when debugging.
+            PathList.Add(NewPath);
+        }
+        for (float x = .5f; x < 21f; x+= 2.0f)
+        {
+            NewPath = (GameObject)Instantiate(Path, new Vector3(x, -10.5f, 0f), Quaternion.Euler(0, 0, 90));
+            NewPath.transform.parent = GameObject.Find("Paths").transform; //parents object to an empty at 0,0,0 to make the heirarchy cleaner when debugging.
+            PathList.Add(NewPath);
+
+        }
+
+        //creates the player and places it on the board
         GameObject GameObjPlayer = (GameObject)Instantiate(PlayerShip, new Vector2(20.5f, -20.5f), Quaternion.Euler(0, 0, 90));
         Player = GameObjPlayer.GetComponent<PlayerShip>();
         //define level text outside of this method
@@ -86,7 +111,9 @@ public class AlienForce : MonoBehaviour {
         Player.transform.rotation = Quaternion.Euler(0, 0, 90);
         for (float x = .5f; x < 21f; x += 2.0f)
         {
-            EnemyList.Add(Instantiate(EnemyShip, new Vector3(x, -.5f, 0f), Quaternion.Euler(0, 0, 180)));
+            NewShip = (GameObject)Instantiate(EnemyShip, new Vector3(x, -.5f, 0f), Quaternion.Euler(0, 0, 180));
+            NewShip.transform.parent = GameObject.Find("Enemies").transform; //parents object to an empty at 0,0,0 to make the heirarchy cleaner when debugging.
+            EnemyList.Add(NewShip);
         }
         //put "Press space to start" on screen
         /*while (!Input.GetKeyDown("space"))
