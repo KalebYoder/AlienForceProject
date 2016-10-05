@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class BaseEnemy : Ship {
+    public GameObject PathAnchor;
+    GameObject AnchorInstance;
+    PathAnchor ThisAnchor;
     public bool emptyX; //If the ship is at an x position where it can turn through the asteroids
     public bool emptyY; //If the ship is at a y position where it can turn through the asteroids
     public bool evenX; //if the integer portion of the x value of the transform is even
@@ -9,21 +12,22 @@ public class BaseEnemy : Ship {
     public bool evenXY;
     public bool canTurnX;
     public bool canTurnY;
-    public bool atLeftEdge;
-    public bool atRightEdge;
-    public bool atTopEdge;
-    public bool atBottomEdge;
+    
     public bool movingHorizontal;
     public bool onTrigger;
     public float ignorePathTime;
-    public bool isHorizontal;
     public bool onHorizontal;
     public bool onVertical;
+    public bool hitObject;
 
     // Use this for initialization
     void Start() {
         pointValue = 100;
         health = 1;
+        AnchorInstance = (GameObject)Instantiate(PathAnchor, transform.position, Quaternion.Euler(0, 0, 180));
+        ThisAnchor = AnchorInstance.GetComponent<PathAnchor>();
+        ThisAnchor.ParentShip = this;
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), ThisAnchor.GetComponent<Collider2D>());
     }
 
     void Update()
@@ -54,10 +58,7 @@ public class BaseEnemy : Ship {
         {
             gameObject.layer = 0;
         }
-        atLeftEdge = (transform.position.x <= 0.5f);
-        atRightEdge = (transform.position.x >= 20.5f);
-        atTopEdge = (transform.position.y >= -.5f);
-        atBottomEdge = (transform.position.y <= -20.5f);
+        
 
         // Shouldn't need this? movingHorizontal = (System.Math.Abs(transform.rotation.z) == 90); //true if the ship is horizontal, as left is 90 degrees and right is -90
         /*if (emptyX || emptyY)
@@ -135,7 +136,7 @@ public class BaseEnemy : Ship {
                 break;
         }*/
     }
-
+    //Not providing an option if one or more routes are blocked when hitting an enemy or wall
    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("PlayerShot"))
@@ -149,6 +150,7 @@ public class BaseEnemy : Ship {
         }
         else if(Physics2D.Raycast(transform.position, transform.forward, 1.0f))
         {
+            hitObject = true;
             //needs to be rotated off of player's direction, rather than globally.
             if(Random.Range(0, 1) == 1) //gives a random chance of turning left or right on impact with a wall.
             {
@@ -163,88 +165,30 @@ public class BaseEnemy : Ship {
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    void OnCollisionStay2D(Collision2D collision)
     {
-        onTrigger = true;
-        var directionChoice = Random.Range(0, 7);
-        var isHorizontal = (collider.transform.rotation.z == 0); //the path is by default stretched along the X axis
-        /******************************************************
-        *******************************************************
-        ****!!!!!CHANGE TO USE rigidBody2D.MovePosition!!!!****
-        *******************************************************
-        ******************************************************/
-        switch (directionChoice)
+        if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("PlayerShot"))
         {
-            //The ship turns 1/4 of the time, since cases 0-3 do nothing, the reverse direction fails, and the same direction doesn't turn
-            //When the ship turns, it gets placed onto the .5 line
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-                break;
-            case 6: //turn left or up
-                if (isHorizontal && !atLeftEdge)
-                {
-                    transform.Rotate(new Vector3(0, 0, 90), Space.World);
-                }
-                else if (!atTopEdge)
-                {
-                    transform.Rotate(new Vector3(0, 0, 0), Space.World);
-                }
-                //IgnorePath();
-                break;
-            case 7: //turn right or down
-                if (isHorizontal && !atRightEdge)
-                {
-                    transform.Rotate(new Vector3(0, 0, -90), Space.World);
-                }
-                else if (!atBottomEdge)
-                {
-                    transform.Rotate(new Vector3(0, 0, 180), Space.World);
-                }
-                //IgnorePath();
-                break;
+            health--;
         }
-    }
+        else if (collision.collider.CompareTag("Enemy") && Physics2D.Raycast(transform.position, transform.forward, 1.0f))
+        {
+            transform.position.Set((float)System.Math.Floor(transform.position.x) + .5f, (float)System.Math.Ceiling(transform.position.y) - .5f, transform.position.z);
+            transform.localRotation = Quaternion.Inverse(transform.localRotation); //makes the enemy ship going head-first into the other ship reverse
 
-    private void IgnorePath()
-    {
-        ignorePathTime = 5;
-        gameObject.layer = 9;
-    }
-
-    public void OnTriggerStay2D(Collider2D collider)
-    {
-        onHorizontal = (collider.gameObject.transform.rotation.eulerAngles.z == 0);
-        onVertical = (collider.gameObject.transform.rotation.eulerAngles.z == 90);
-        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), collider);
+        }
+        else if (Physics2D.Raycast(transform.position, transform.forward, 1.0f))
+        {
+            if (Random.Range(0, 1) == 1) //gives a random chance of turning left or right on impact with a wall.
+            {
+                transform.position.Set((float)System.Math.Floor(transform.position.x) + .5f, (float)System.Math.Ceiling(transform.position.y) - .5f, transform.position.z);
+                transform.localRotation = Quaternion.Euler(0, 0, 90);
+            }
+            else
+            {
+                transform.position.Set((float)System.Math.Floor(transform.position.x) + .5f, (float)System.Math.Ceiling(transform.position.y) - .5f, transform.position.z);
+                transform.localRotation = Quaternion.Euler(0, 0, -90);
+            }
+        }
     }
 }
-/*void OnCollisionStay2D(Collision2D collision)
-{
-    if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("PlayerShot"))
-    {
-        health--;
-    }
-    else if(collision.collider.CompareTag("Enemy") && Physics2D.Raycast(transform.position, transform.forward, 1.0f))
-    {
-        transform.position.Set((float)System.Math.Floor(transform.position.x) + .5f, (float)System.Math.Ceiling(transform.position.y) - .5f, transform.position.z);
-        transform.localRotation = Quaternion.Inverse(transform.localRotation); //makes the enemy ship going head-first into the other ship reverse
-
-    }
-    else if(Physics2D.Raycast(transform.position, transform.forward, 1.0f))
-    {
-        if(Random.Range(0, 1) == 1) //gives a random chance of turning left or right on impact with a wall.
-        {
-            transform.position.Set((float)System.Math.Floor(transform.position.x) + .5f, (float)System.Math.Ceiling(transform.position.y) - .5f, transform.position.z);
-            transform.localRotation = Quaternion.Euler(0, 0, 90);
-        }
-        else
-        {
-            transform.position.Set((float)System.Math.Floor(transform.position.x) + .5f, (float)System.Math.Ceiling(transform.position.y) - .5f, transform.position.z);
-            transform.localRotation = Quaternion.Euler(0, 0, -90);
-        }
-    }
-}*/

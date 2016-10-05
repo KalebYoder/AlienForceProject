@@ -19,6 +19,8 @@ public class AlienForce : MonoBehaviour {
     int levelDisplay;
     public GameObject EnemyShip;
     private GameObject NewShip;
+    public GameObject PathAnchor; //a sub-object on the enemy that keeps it on the path
+    private GameObject NewAnchor;
     //public ArrayList EnemyList = new ArrayList();
     public List<Object> EnemyList = new List<Object>();
     //Text LevelText;
@@ -115,6 +117,11 @@ public class AlienForce : MonoBehaviour {
             NewShip.transform.parent = GameObject.Find("Enemies").transform; //parents object to an empty at 0,0,0 to make the heirarchy cleaner when debugging.
             EnemyList.Add(NewShip);
         }
+        /*foreach (GameObject EnemyShip in EnemyList)
+        {
+            GameObject NewAnchor = (GameObject)Instantiate(PathAnchor, EnemyShip.transform.position, Quaternion.identity);
+            NewAnchor.transform.parent = EnemyShip.transform;
+        }*/
         //put "Press space to start" on screen
         /*while (!Input.GetKeyDown("space"))
         {

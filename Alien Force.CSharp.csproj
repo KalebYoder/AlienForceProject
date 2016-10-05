@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\AlienForce.cs" />
     <Compile Include="Assets\Scripts\Asteroid.cs" />
     <Compile Include="Assets\Scripts\BaseEnemy.cs" />
+    <Compile Include="Assets\Scripts\PathAnchor.cs" />
     <Compile Include="Assets\Scripts\PlayerShip.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
